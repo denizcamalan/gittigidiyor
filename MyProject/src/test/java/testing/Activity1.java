@@ -22,7 +22,7 @@ public class Activity1 {
 				
 				WebDriver driver = new ChromeDriver();
 				driver.manage().window().setSize(new Dimension(1440, 875));
-				System.setProperty("webdriver.chrome.driver", "/Users/denizcamalan/Downloads/SeleniumPacks/chromedriver");
+				System.setProperty("webdriver.chrome.driver", "/Users/*/chromedriver");
 				driver.get("https://www.gittigidiyor.com");
 				
 			// Ana sayfanın açıldığı kontrol edilir.
@@ -35,7 +35,7 @@ public class Activity1 {
 				}else {
 					System.out.println("Failed");
 				}
-				
+			
 			//  Siteye login olunur.
 				
 				driver.get("https://www.gittigidiyor.com/uye-girisi");
@@ -50,7 +50,7 @@ public class Activity1 {
 				}else {
 					System.out.println("Login Failled");
 				} 
-				
+			
 			// Arama kutucuğuna bilgisayar kelimesi girilir. 
 			
 			    WebElement searchbtn = driver.findElement(By.cssSelector(".psxmjs-2"));
@@ -83,8 +83,6 @@ public class Activity1 {
 			   List<WebElement> l1 = randomProd.findElements(By.tagName("a"));
 			   Random r = new Random();
 			   l1.get(r.nextInt(l1.size())).click();
-			   WebElement price = driver.findElement(By.xpath("//div[@id='sp-price-container']/div[4]"));
-			   String priceText= price.getText();      
 
 			 // Seçilen ürün sepete eklenir.
 			   
@@ -92,13 +90,15 @@ public class Activity1 {
 			   js.executeScript("arguments[0].click();", addBasket);
 			   WebDriverWait wait = new WebDriverWait(driver, 100);
 			   wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='header_wrapper']/div[4]/div[3]/div/div/div/div[2]/div[4]/div/a"))).click();
-
+			   WebElement price = driver.findElement(By.xpath("//div[@id='cart-price-container']/div[3]/p"));
+			   String priceText= price.getText(); 
+			   
 			 // Ürün sayfasındaki fiyat ile sepette yer alan ürün fiyatının doğruluğu karşılaştırılır.
-			    
-			   WebElement basketPrice = driver.findElement(By.cssSelector(".new-price"));
+			   
+			   WebElement basketPrice = driver.findElement(By.xpath("//div[@id='cart-price-container']/div[3]/p"));
 		       String actual_price = basketPrice.getText();
-		       
-		       if(actual_price.compareTo(priceText)>0){
+
+		       if(actual_price.equals(priceText)){
 		       	System.out.println("Price Equal");
 		       }else 
 		       System.out.println("Price Failed");
@@ -106,30 +106,31 @@ public class Activity1 {
 		      // Adet arttırılarak ürün adedinin 2 olduğu doğrulanır.
 
 		       driver.findElement(By.cssSelector(".gg-input-select > .amount")).sendKeys("2");
-
-		       WebElement twoPrice = driver.findElement(By.xpath("//form[@id='submit-cart']/div/div[2]/div[3]/div/div/div/div[5]/div/div/ul/li/div"));
-		       String tot_price = twoPrice.getText();
-		       String expectedText = "Ürün Toplamı (2 Adet)";
 		       
-		       if (tot_price.compareTo(expectedText)>0) {
+			   wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//option[. = '2 Adet']")));
+			   WebElement twoPrice = driver.findElement(By.xpath("//p[contains(. ,'2 Adet')]"));
+		       String tot_price = twoPrice.getText();
+		       System.out.println( tot_price );
+
+		       if (tot_price.equals("2 Adet")) {
 					System.out.println("2 Product Succesful");
 		       }else {
 					System.out.println("2 Product Failled");
 				} 
-		       
+
 			  // Ürün sepetten silinerek sepetin boş olduğu kontrol edilir.
 		       
-			    driver.findElement(By.cssSelector(".row > .btn-delete > .gg-icon")).click(); 
-
-			    WebElement checkbasket = driver.findElement(By.xpath("//h2[contains(.,'Sepetinizde ürün bulunmamaktadır.')]"));
+			    WebElement clearBasket = driver.findElement(By.cssSelector(".row > .btn-delete > .gg-icon"));
+			    clearBasket.click();
+			    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[contains(text(),('Sepetinizde ürün bulunmamaktadır.'))]")));
+			    WebElement checkbasket = driver.findElement(By.xpath("//h2[contains(text(),('Sepetinizde ürün bulunmamaktadır.'))]"));
 			    String check_prod = checkbasket.getText();
 			    String actual_prod = "Sepetinizde ürün bulunmamaktadır.";
-			    System.out.println(check_prod);
 		       
-		        if(check_prod.compareTo(actual_prod)>0){
-				       System.out.println("Succesful");
+		        if(actual_prod.equals(check_prod)){
+				       System.out.println("Basket Clear Succesful");
 		        }else
-				       System.out.println("Failled");				 
+				       System.out.println("Basket Clear Failled");				 
 		}
 	
 }
