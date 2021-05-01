@@ -1,9 +1,11 @@
 # gittigidiyor
  Selenium Web Automation
-SeleniumWebAutomation Gittigidiyor Selenium WebDriver (java) ile basit user story test otomasyonu
+
+Gittigidiyor Selenium WebDriver (java) ile basit user story test otomasyonudur.
 
 Kullanılan Teknolojiler
 
+Maven projesi
 Selenium WebDriver 3.141.59 
 Selenium, JUnit ve Log4J kütüphaneleri 
 Chrome Driver
